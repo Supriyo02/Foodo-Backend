@@ -1,1 +1,1 @@
-from .routers import router
+# silence is the best answer

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from typing import Optional, AsyncGenerator
-from core import settings
+from core.config.config import settings
 
 engine: Optional[AsyncEngine] = None
 async_session: Optional[sessionmaker] = None
