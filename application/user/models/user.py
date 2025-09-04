@@ -1,11 +1,14 @@
 # models/auth.py
 import uuid
-from sqlalchemy import Column, String, Boolean, ForeignKey, DateTime, func, Enum
+from sqlalchemy import Column, String, DateTime, func, Enum
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from db.base import Base
 from core.models.base import Base as BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
 class User(Base):
     __tablename__ = "users"
@@ -26,8 +29,28 @@ class User(Base):
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
 
 class UserModel(BaseModel[User]):
-    def __init__(self, session: AsyncSession):
-        super().__init__(session, User)
+    def __init__(self, db: AsyncSession):
+        super().__init__(db, User)
+
+    async def get_user_by_email(self, email: str) -> Optional[User]:
+        try:
+            q = select(User).where(User.email == email)
+            res = await self.db.execute(q)
+            user = res.scalars().first()
+            return user
+        except SQLAlchemyError:
+            self.db.rollback()
+            raise
+
+    async def get_user_by_id(self, id: str) -> Optional[User]:
+        try:
+            q = select(User).where(User.id == id)
+            res = await self.db.execute(q)
+            user = res.scalars().first()
+            return user
+        except SQLAlchemyError:
+            self.db.rollback()
+            raise
 
 
 
