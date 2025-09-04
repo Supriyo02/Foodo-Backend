@@ -1,8 +1,9 @@
 from core.services.base import Base as BaseService
 from sqlalchemy.ext.asyncio import AsyncSession
-from application.vendors.models.vendors import Vendor
-from application.vendors.schemas.vendors import VendorCreate, VendorView
+from application.vendors.models.vendors import VendorModel
+from application.vendors.schemas.vendors import VendorCreate, VendorView, VendorUpdate
 
-class Vendor(BaseService[Vendor, VendorCreate, VendorView]):
+class Vendor(BaseService[VendorModel, VendorCreate, VendorView, VendorUpdate]):
     def __init__(self, session: AsyncSession):
-        super().__init__(session, Vendor, VendorView)
+        model = VendorModel(session)
+        super().__init__(model, VendorView)
