@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from core.config.config import settings
 from db.session import init_db_engine, shutdown_db
-from application.vendors.routers import router as vendors_router
+from application.vendor.routers import router as vendors_router
 
 
 @asynccontextmanager
