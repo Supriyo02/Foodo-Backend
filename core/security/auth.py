@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 import secrets
 import hashlib
 from ..config.config import settings
+import json
 
 pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -17,7 +18,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 def create_access_token(user_id: str, role:str, name: str, expires_delta: timedelta | None = None) -> str:
     current_time = datetime.now(timezone.utc)
     expire = current_time + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode = {"sub": {"user_id": user_id, "role": role, "name": name}, "exp": int(expire.timestamp()), "iat": int(current_time.timestamp())}
+    to_encode = {"sub": json.dumps({"user_id": user_id, "role": role, "name": name}), "exp": int(expire.timestamp()), "iat": int(current_time.timestamp())}
     encoded = jwt.encode(to_encode, settings.TOKEN_SECRET_KEY, algorithm=settings.TOKEN_ALGORITHM)
     return encoded
 

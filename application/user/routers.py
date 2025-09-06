@@ -6,6 +6,7 @@ from .schemas.user import UserCreate, UserLogin, UserView
 from .schemas.refresh_token import TokenResponse
 from db.session import get_session
 from pydantic import UUID4
+from core.dependencies.auth import get_current_user
 
 router = APIRouter()
 
@@ -37,7 +38,7 @@ async def login(
 ):
     return await service.authenticate(payload.email, payload.password, user_agent=request.headers.get("user-agent"), ip=request.client.host if request.client else None)
 
-@router.post("/refresh", response_model=TokenResponse)
+@router.post("/token/refresh", response_model=TokenResponse)
 async def refresh_token(
     payload: dict,
     request: Request = None,
@@ -45,6 +46,10 @@ async def refresh_token(
 ):
     return await service.rotate_refresh_token(payload, user_agent=request.headers.get("user-agent"), ip=request.client.host if request.client else None)
 
-@router.post("/revoke", response_model=dict)
+@router.post("/token/revoke", response_model=dict)
 async def revoke(payload: dict, service: AuthService = Depends(get_auth_service)):
     return await service.revoke_refresh_token(payload)
+
+@router.get("/", response_model=dict)
+async def read_me(current_user: dict = Depends(get_current_user)):
+    return current_user
