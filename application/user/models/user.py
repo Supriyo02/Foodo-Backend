@@ -27,6 +27,7 @@ class User(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True)
 
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
+    vendor = relationship("Vendor", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 class UserModel(BaseModel[User]):
     def __init__(self, db: AsyncSession):
