@@ -15,7 +15,7 @@ class User(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(100), nullable=True)
     email = Column(String(100), unique=True, nullable=False, index=True)
-    phone = Column(String(10), nullable=True)
+    phone = Column(String(10), nullable=False)
     password_hash = Column(String(255), nullable=False)
     role = Column(
         Enum("customer", "vendor", "admin", name="user_roles"),
@@ -31,6 +31,17 @@ class User(Base):
 class UserModel(BaseModel[User]):
     def __init__(self, db: AsyncSession):
         super().__init__(db, User)
+
+    async def create(self, payload: dict):
+        data = self.model(**payload)
+        self.db.add(data)
+        try:
+            await self.db.commit()
+            await self.db.refresh(data)
+            return data
+        except SQLAlchemyError:
+            await self.db.rollback()
+            raise
 
     async def get_user_by_email(self, email: str) -> Optional[User]:
         try:

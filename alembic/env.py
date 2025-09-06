@@ -1,4 +1,5 @@
-from application.vendors.models import *
+from application.vendor.models import *
+from application.user.models import *
 import asyncio
 from logging.config import fileConfig
 from sqlalchemy import pool

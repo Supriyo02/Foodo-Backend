@@ -9,4 +9,5 @@ databases
 psycopg2-binary
 pydantic-settings
 passlib[bcrypt] 
+pydantic[email]
 python-jose[cryptography]

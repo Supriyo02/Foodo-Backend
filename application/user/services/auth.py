@@ -13,8 +13,7 @@ from fastapi import HTTPException, status
 from ..schemas.refresh_token import TokenResponse
 
 class Auth:
-    def __init__(self, db: AsyncSession, session: AsyncSession):
-        self.db = db
+    def __init__(self, session: AsyncSession):
         self.user_model = UserModel(session)
         self.refresh_token_model = RefreshTokenModel(session)
 
