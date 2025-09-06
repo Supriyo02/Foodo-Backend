@@ -14,7 +14,7 @@ class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    token_hash = Column(String(255), nullable=False)
+    token_hash = Column(String(255), nullable=False, index=True)
     user_agent = Column(String(255), nullable=True)
     ip_address = Column(String(100), nullable=True)
     revoked = Column(Boolean, server_default="false", nullable=False)

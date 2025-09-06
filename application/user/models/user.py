@@ -45,7 +45,7 @@ class UserModel(BaseModel[User]):
 
     async def get_user_by_email(self, email: str) -> Optional[User]:
         try:
-            q = select(User).where(User.email == email)
+            q = select(self.model).where(self.model.email == email)
             res = await self.db.execute(q)
             user = res.scalars().first()
             return user
