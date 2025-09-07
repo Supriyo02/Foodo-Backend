@@ -1,5 +1,6 @@
 from application.vendor.models import *
 from application.user.models import *
+from application.menu.models import *
 import asyncio
 from logging.config import fileConfig
 from sqlalchemy import pool
@@ -15,6 +16,8 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
+print("Tables in metadata:", Base.metadata.tables.keys())
 
 def run_migrations_offline():
     context.configure(

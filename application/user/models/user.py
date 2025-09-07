@@ -1,4 +1,4 @@
-# models/auth.py
+from __future__ import annotations
 import uuid
 from sqlalchemy import Column, String, DateTime, func, Enum
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -9,6 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ...vendor.models.vendor import Vendor
 
 class User(Base):
     __tablename__ = "users"
@@ -51,7 +55,7 @@ class UserModel(BaseModel[User]):
             user = res.scalars().first()
             return user
         except SQLAlchemyError:
-            self.db.rollback()
+            await self.db.rollback()
             raise
 
     async def get_user_by_id(self, id: str) -> Optional[User]:
@@ -61,7 +65,7 @@ class UserModel(BaseModel[User]):
             user = res.scalars().first()
             return user
         except SQLAlchemyError:
-            self.db.rollback()
+            await self.db.rollback()
             raise
 
 

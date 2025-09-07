@@ -1,3 +1,4 @@
+from __future__ import annotations
 import uuid
 from sqlalchemy import Column, String, Boolean, DECIMAL, DateTime, func, ForeignKey, select
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -7,6 +8,12 @@ from core.models.base import Base as BaseModel
 from sqlalchemy.orm import relationship
 from typing import Optional
 from sqlalchemy.exc import SQLAlchemyError
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ...menu.models.item import Item
+    from ...menu.models.meal import Meal
+    from ...user.models.user import User
 
 class Vendor(Base):
     __tablename__ = "vendors"
@@ -27,7 +34,9 @@ class Vendor(Base):
     user = relationship(
         "User",
         back_populates="vendor"
-    )   
+    )
+    items = relationship("Item", back_populates="vendor")
+    meals = relationship("Meal", back_populates="vendor")
 
 class VendorModel(BaseModel[Vendor]):
     def __init__(self, session: AsyncSession):
