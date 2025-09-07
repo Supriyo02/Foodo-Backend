@@ -1,12 +1,14 @@
 from __future__ import annotations
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy import Column, String, ForeignKey, Boolean, DECIMAL, DateTime, func
+from core.models.base import Base as BaseModel
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import expression
 from .association import categories_items
 import uuid
 from db.base import Base
 from typing import TYPE_CHECKING
+from sqlalchemy.ext.asyncio import AsyncSession
 
 if TYPE_CHECKING:
     from ...vendor.models.vendor import Vendor
@@ -35,3 +37,7 @@ class Item(Base):
         back_populates="items",
         cascade="all, delete",
     )
+
+class ItemModel(BaseModel[Item]):
+    def __init__(self, db: AsyncSession):
+        super().__init__(db, Item)

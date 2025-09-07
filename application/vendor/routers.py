@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.session import get_session
 from .services.vendor import Vendor as VendorService
-from .schemas.vendor import VendorCreate, VendorUpdate, VendorView, VendorCreateRequest
+from .schemas.vendor import VendorView, VendorCreateRequest
 from typing import List, Optional
 from pydantic import UUID4
 from uuid import UUID

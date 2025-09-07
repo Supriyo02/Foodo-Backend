@@ -60,3 +60,17 @@ class VendorModel(BaseModel[Vendor]):
         except SQLAlchemyError:
             await self.db.rollback()
             raise
+
+    async def get_vendor_by_user_id(self, id: str) -> Optional[Vendor]:
+        try:
+            q = select(self.model).where(self.model.user_id == id)
+            result = await self.db.execute(q)
+            vendor = result.scalars().first()
+            if not vendor:
+                return None
+            return vendor
+            
+        except SQLAlchemyError:
+            await self.db.rollback()
+            raise
+
