@@ -11,9 +11,6 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ...vendor.models.vendor import Vendor
-
 class User(Base):
     __tablename__ = "users"
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

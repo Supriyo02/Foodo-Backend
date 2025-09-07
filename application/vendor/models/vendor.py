@@ -10,11 +10,6 @@ from typing import Optional
 from sqlalchemy.exc import SQLAlchemyError
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ...menu.models.item import Item
-    from ...menu.models.meal import Meal
-    from ...user.models.user import User
-
 class Vendor(Base):
     __tablename__ = "vendors"
 

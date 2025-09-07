@@ -8,9 +8,6 @@ from sqlalchemy.sql import expression
 from db.base import Base
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ...vendor.models.vendor import Vendor
-
 class Meal(Base):
     __tablename__ = "meals"
 

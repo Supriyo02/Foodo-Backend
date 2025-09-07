@@ -10,10 +10,6 @@ from db.base import Base
 from typing import TYPE_CHECKING
 from sqlalchemy.ext.asyncio import AsyncSession
 
-if TYPE_CHECKING:
-    from ...vendor.models.vendor import Vendor
-    from .category import Category
-
 class Item(Base):
     __tablename__ = "items"
 
