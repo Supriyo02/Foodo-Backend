@@ -3,12 +3,19 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from db.session import get_session
 from .schemas.item import ItemView, ItemCreateRequest
+from .schemas.category import CategoryCreate, CategoryView
+from .services.category import Category as CategoryModel
 from .services.item import Item as ItemService
+from .services.category import Category as CategoryService
+from typing import Optional, List
 
 router = APIRouter()
 
 async def get_item_service(session: AsyncSession = Depends(get_session)) -> ItemService:
     return ItemService(session)
+
+async def get_category_service(session: AsyncSession = Depends(get_session)) -> CategoryService:
+    return CategoryService(session)
 
 @router.post("/item/create", response_model=ItemView)
 async def item_create(
@@ -35,3 +42,17 @@ async def item_view(
     service: ItemService = Depends(get_item_service)
 ):
     return await service.view(id)
+
+@router.post("/category/create", response_model=CategoryView)
+async def category_create(
+    payload: CategoryCreate,
+    service: CategoryService = Depends(get_category_service)
+):
+    return await service.create(payload)
+
+@router.get("/category/list", response_model=List[CategoryView])
+async def category_list(
+    limit: Optional[int] = 10, offset: Optional[int] = 0,
+    service: CategoryService = Depends(get_category_service)
+):
+    return await service.list(limit=limit, offset=offset)

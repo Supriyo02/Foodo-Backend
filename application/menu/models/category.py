@@ -7,6 +7,8 @@ import uuid
 from db.base import Base
 from sqlalchemy.ext.associationproxy import association_proxy
 from typing import TYPE_CHECKING
+from core.models.base import Base as BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
 if TYPE_CHECKING:
     from .category import Category
@@ -23,3 +25,7 @@ class Category(Base):
 
     meals_categories = relationship("MealCategory", back_populates="category", cascade="all, delete-orphan", passive_deletes=True)
     meals = association_proxy("meals_categories", "meal")
+
+class CategoryModel(BaseModel[Category]):
+    def __init__(self, db: AsyncSession):
+        super().__init__(db, Category)
