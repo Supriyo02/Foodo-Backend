@@ -1,11 +1,13 @@
-from application.vendors.models import *
+from application.vendor.models import *
+from application.user.models import *
+from application.menu.models import *
 import asyncio
 from logging.config import fileConfig
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 
-from core.config import settings
+from core.config.config import settings
 from db.base import Base
 
 config = context.config
@@ -14,6 +16,8 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
+print("Tables in metadata:", Base.metadata.tables.keys())
 
 def run_migrations_offline():
     context.configure(

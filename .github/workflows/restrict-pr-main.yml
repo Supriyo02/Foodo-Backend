@@ -1,0 +1,17 @@
+name: Restrict PR Source to Dev
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR source branch is 'dev'
+        run: |
+          if [[ "${{ github.head_ref }}" != "dev" ]]; then
+            echo "Error: Pull requests to 'main' must originate from the 'dev' branch.";
+            exit 1;
+          fi

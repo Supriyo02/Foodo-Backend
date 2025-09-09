@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from typing import Optional, AsyncGenerator
-from core import settings
+from core.config.config import settings
+from core.models import *
 
 engine: Optional[AsyncEngine] = None
 async_session: Optional[sessionmaker] = None
@@ -51,3 +52,29 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
         raise RuntimeError("DB engine is not initialized, call init_db_engine first")
     async with async_session() as session:
         yield session
+
+# For alembic
+
+# from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
+# from sqlalchemy.pool import NullPool  # for simple connection per operation
+
+# def init_db_engine(
+#     database_url: str = settings.DATABASE_URL,
+#     *,
+#     echo: bool = False,
+# ) -> AsyncEngine:
+#     global engine, async_session
+
+#     if engine is not None:
+#         return engine
+
+#     engine = create_async_engine(
+#         database_url,
+#         echo=echo,
+#         future=True,
+#         poolclass=NullPool,       # critical on Windows for migrations
+#         connect_args={"timeout": 60}  # optional: increase timeout
+#     )
+
+#     return engine
+
