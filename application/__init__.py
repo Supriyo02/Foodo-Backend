@@ -5,6 +5,7 @@ from db.session import init_db_engine, shutdown_db
 from application.vendor.routers import router as vendor_routers
 from application.user.routers import router as user_routers
 from application.menu.routers import router as menu_router
+from fastapi.responses import JSONResponse
 
 
 @asynccontextmanager
@@ -36,3 +37,7 @@ app = FastAPI(
 app.include_router(vendor_routers, prefix=f"{settings.ROUTER_PREFIX}/vendors", tags=["vendors"])
 app.include_router(user_routers, prefix=f"{settings.ROUTER_PREFIX}/users", tags=["users"])
 app.include_router(menu_router, prefix=f"{settings.ROUTER_PREFIX}/menus", tags=["menus"])
+
+@app.get("/health", response_class=JSONResponse, tags=["health"])
+async def health():
+    return {"status": "ok"}
