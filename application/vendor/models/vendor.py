@@ -1,4 +1,3 @@
-from __future__ import annotations
 import uuid
 from sqlalchemy import Column, String, Boolean, DECIMAL, DateTime, func, ForeignKey, select
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -8,7 +7,6 @@ from core.models.base import Base as BaseModel
 from sqlalchemy.orm import relationship
 from typing import Optional
 from sqlalchemy.exc import SQLAlchemyError
-from typing import TYPE_CHECKING
 
 class Vendor(Base):
     __tablename__ = "vendors"
@@ -30,6 +28,7 @@ class Vendor(Base):
         "User",
         back_populates="vendor"
     )
+    categories = relationship("Category", back_populates="vendor", cascade="all, delete-orphan")
     items = relationship("Item", back_populates="vendor")
     meals = relationship("Meal", back_populates="vendor")
 

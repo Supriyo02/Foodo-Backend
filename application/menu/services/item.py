@@ -2,7 +2,7 @@ from core.services.base import Base as BaseService
 from sqlalchemy.ext.asyncio import AsyncSession
 from application.menu.models.item import ItemModel
 from application.vendor.models.vendor import VendorModel
-from application.menu.schemas.item import ItemCreate, ItemUpdate, ItemView, ItemCreateRequest
+from application.menu.schemas.item import ItemCreate, ItemUpdate, ItemView, ItemCreateRequest, MapCategoryItem
 from uuid import UUID
 from fastapi import HTTPException
 
@@ -36,3 +36,23 @@ class Item(BaseService[ItemModel, ItemCreate, ItemView, ItemUpdate]):
             return self.read_schema.model_validate(result, from_attributes=True)
         if not result:
             raise HTTPException(status_code=404, detail="Item with given id not found")
+        
+    async def map_category_item(self, payload: MapCategoryItem) -> MapCategoryItem:
+        item_id = payload.item_id
+        category_id = payload.category_id
+        try:
+            return await self.model.map_item_to_category(item_id, category_id)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+    
+    async def unmap_category_item(self, payload: MapCategoryItem) -> MapCategoryItem:
+        item_id = payload.item_id
+        category_id = payload.category_id
+        try:
+            return await self.model.unmap_category_item(item_id, category_id)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+    
+    async def get_items_by_category(self, category_id: str, limit:int, offset:int) -> list[ItemView]:
+        results = await self.model.get_items_by_category(category_id, limit, offset)
+        return [self.read_schema.model_validate(r, from_attributes=True) for r in results]

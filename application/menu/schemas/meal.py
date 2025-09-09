@@ -3,37 +3,34 @@ from typing import Optional
 import uuid
 from datetime import datetime
 
-class Item(BaseModel):
+class Meal(BaseModel):
     vendor_id: uuid.UUID
     name: str
     description: Optional[str] = None
     image_url: Optional[str] = None
-    price: float
+    base_price: float
     is_available: bool = True
 
     model_config = {"from_attributes": True}
 
-class ItemCreate(Item):
+class MealCreate(Meal):
     pass
 
-class ItemCreateRequest(BaseModel):
-    name: Optional[str] = None
+class MealCreateRequest(BaseModel):
+    name: str
     description: Optional[str] = None
     image_url: Optional[str] = None
-    price: float
+    base_price: float
     is_available: bool = True
 
     model_config = {"from_attributes": True}
 
-class ItemUpdate(Item):
+class MealUpdate(Meal):
     pass
 
-class MapCategoryItem(BaseModel):
-    category_id: uuid.UUID
-    item_id: uuid.UUID
 
-class ItemView(Item):
+class MealView(Meal):
     id: uuid.UUID
-    created_at: Optional[datetime]
+    created_at: datetime
     updated_at: Optional[datetime]
     deleted_at: Optional[datetime]

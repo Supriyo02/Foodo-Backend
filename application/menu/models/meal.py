@@ -7,6 +7,8 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.sql import expression
 from db.base import Base
 from typing import TYPE_CHECKING
+from core.models.base import Base as BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
 class Meal(Base):
     __tablename__ = "meals"
@@ -30,3 +32,7 @@ class Meal(Base):
 
     # convenience: list of Category objects via association proxy
     categories = association_proxy("meals_categories", "category")
+
+class MealModel(BaseModel[Meal]):
+    def __init__(self, db: AsyncSession):
+        super().__init__(db, Meal)
